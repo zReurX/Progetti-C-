@@ -23,3 +23,6 @@ string Persona::getNome() {
 string Persona::getCognome() {
     return cognome;
 }
+void Persona::stampa() {
+    cout << nome << cognome;
+}

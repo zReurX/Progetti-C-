@@ -17,7 +17,7 @@ public:
     string getNome();
     string getCognome();
     virtual void leggi() = 0;
-    virtual void stampa() = 0;
+    virtual void stampa();
 };
 
 #endif
