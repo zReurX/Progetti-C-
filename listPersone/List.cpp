@@ -12,7 +12,19 @@ List::List(List &lista) {
     }
 }
 List::~List() {
+    Node* pCancel = head;
+    while (head != nullptr) {
+        head = head->getPtrNext();
+        delete pCancel;
+        pCancel = head;
+    }
 
+    /*non va bene consiglio di patrire da head*/
+    // while (pCancel != nullptr) {
+    //     pCancel = pCancel->getPtrNext();
+    //     delete head;
+    //     head = pCancel;
+    // }
 }
 bool List::isEmpty() {
     return !head ? true : false;
@@ -29,7 +41,7 @@ void List::display() {
     }
     
 } //scansione della list
-bool List::insertHead(int data) {
+bool List::insertHead(Persona data) {
     Node* pNew = new Node(data, head);
     if (!pNew) {
         cerr << "Allocazione fallita";
@@ -39,7 +51,7 @@ bool List::insertHead(int data) {
     return true;
 }
 
-bool List::insertTail(int data) {
+bool List::insertTail(Persona data) {
     Node* pNew = new Node(data);
     if (!pNew) {
         cerr << "Allocazione fallita";
@@ -74,7 +86,7 @@ void List::displayHelper() {
 //     return head;
 // }
 
-bool List::remove(int data) {
+bool List::remove(Persona data) {
     bool flag = false;
     if (!isEmpty()) {
         Node* pCancel;
@@ -101,95 +113,28 @@ bool List::remove(int data) {
     return flag;
 }
 
-void List::ordina() {
-    /*Ordinamento ingenuo*/
-    // for (int i = 0; i < dim - 1; i++) {
-    //     for (int y = i; y < dim; y++) {
-    //         if (arr[i] < arr[y]) {
-    //             int temp = arr[i];
-    //             arr[i] = arr[y];
-    //             arr[y] = temp;
-    //         }
-    //     }
-    // }
-
-    
+Persona List::giovane() {
+    Persona temp;
     if (!isEmpty()) {
-        Node* pi = head, *pj;
-        while (pi->getPtrNext() != nullptr) {
-            pj = pi->getPtrNext();
-            while (pj != nullptr) {
-                if (pi->getInfo() > pj->getInfo()) {
-                    swap(pi, pj);
-                }
+        Node* pMin = head;
+        Node* pAux = head->getPtrNext();
+        while (pAux != nullptr) {
+            if (pMin->getInfo().p() > pAux->getInfo().getNascita()) {
+                pMin = pAux;
             }
-            pi = pi->getPtrNext();
-        }
-    } else {
-        cout << "Lista vuota";
-    }
-}
-
-void List::swap(Node* pi, Node* pj) {
-    int temp = pi->getInfo();
-    pi->setInfo(pj->getInfo());
-    pj->setInfo(temp);
-}
-
-istream& operator>>(istream& in, List* l1) {
-    int n, value;
-    cout << "Inserisci il n elementi: ";
-    in >> n;
-    for (int  i = 0; i < n; i++) {
-        in >> value;
-       cout << !l1->insertTail(value) && "Allocazione fallita";
-    }
-    return in;
-}
-
-List& List::operator+(List& l1) {
-    Node* pAux = head;
-    if (!isEmpty()) {
-        while (pAux->getPtrNext()) {
             pAux = pAux->getPtrNext();
         }
-        pAux->setPtrNext(l1.head);
+        temp = pMin->getInfo();
     } else {
-        head = l1.head;
+        cout << "Lista vuote";
     }
-    l1.head = nullptr;
-    return *this;
+    return temp;
 }
 
-List megaOrdinamento(List& l1, List& l2) {
-    List fusione;
-
-    l1.ordina();
-    l2.ordina();
-
-    Node *pi, *pj;
-    pi = l1.head;
-    pj = l2.head;
-
-    while (pi != nullptr && pj != nullptr) {
-        if (pi->getInfo() < pj->getInfo()) {
-            fusione.insertTail(pi->getInfo());
-            pi = pi->getPtrNext();
-        } else {
-            fusione.insertTail(pj->getInfo());
-            pj = pj->getPtrNext();
-        }
+Node* List::ricerca(string n, string c) {
+    Node* pAux;
+    while (pAux != nullptr && (pAux->getInfo().getNome() != n || pAux->getInfo().getCognome() != c)) {
+        pAux = pAux->getPtrNext();
     }
-
-    while (pi != nullptr) {
-        fusione.insertTail(pi->getInfo());
-        pi = pi->getPtrNext();
-    }
-    
-    while (pj != nullptr) {
-        fusione.insertTail(pj->getInfo());
-        pj = pj->getPtrNext();
-    }
-
-    return fusione;
+    return pAux;
 }

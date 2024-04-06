@@ -8,7 +8,7 @@ class Rastreliera
 private:
     static int biciMax;
     int dim;
-    Bicicletta* nBici;
+    Bicicletta *nBici;
 public:
     Rastreliera();
     Rastreliera(int dim);
