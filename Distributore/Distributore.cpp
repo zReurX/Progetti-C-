@@ -9,18 +9,18 @@ Distributore::Distributore(){
 /*
 * Costruttore orientato ai parametri
 */
-Distributore::Distributore(int element){
-    top = new Node(element);
+Distributore::Distributore(Snack element){
+    top = new Nodo(element);
 }
 /*
 * Costruttore copia
 */
 Distributore::Distributore(const Distributore& st){
-    Node *pTemp = st.top;
+    Nodo *pTemp = st.top;
     while (pTemp)
     {
-        insertTail(pTemp->getInfo());
-        pTemp = pTemp->getPtrNext();
+        insertTail(pTemp->getSnack());
+        pTemp = pTemp->getNext();
     }
     
 }
@@ -28,15 +28,15 @@ Distributore::Distributore(const Distributore& st){
 * Distruttore
 */
 Distributore::~Distributore(){ 
-    Node *pdelete = top;
+    Nodo *pdelete = top;
     while (pdelete) {
-        top = top->getPtrNext();
+        top = top->getNext();
         delete pdelete;
         pdelete = top;
     }
 }
-bool Distributore::insertTail(int data) {
-    Node* pNew = new Node(data);
+bool Distributore::insertTail(Snack data) {
+    Nodo* pNew = new Nodo(data);
     if (!pNew) {
         cerr << "Allocazione fallita";
         return false;
@@ -44,11 +44,11 @@ bool Distributore::insertTail(int data) {
     if (isEmpty()) {
         top = pNew;
     } else {
-        Node* pAux = top;
-        while (pAux->getPtrNext() != nullptr) {
-            pAux = pAux->getPtrNext();
+        Nodo* pAux = top;
+        while (pAux->getNext() != nullptr) {
+            pAux = pAux->getNext();
         }
-        pAux->setPtrNext(pNew);
+        pAux->setNext(pNew);
     }
     return true;
 }
@@ -64,45 +64,62 @@ bool Distributore::isEmpty(){
 /*
 * Metodo push
 */
-bool Distributore::push(int element){
-    Node *pNew = new Node(element);
+bool Distributore::push(Snack element){
+    Nodo *pNew = new Nodo(element);
     if(!pNew){
         cerr << "Allocazione fallita. " << endl;
         return false;
     }
-    pNew->setPtrNext(top);
+    pNew->setNext(top);
     top = pNew;
     return true;
+}
+void rifornimento(int numSnack) {
+    Snack n;
+    for (int i = 0; i < numSnack; i++) {
+        cin >> n;
+    }
 }
 /*
 * Metodo pop
 */
-bool Distributore::pop(){
-    Node *pCancel = top;
+Snack Distributore::pop(){
+    Snack temp;
     if(!isEmpty()){
-        cout << endl << top->getInfo();
-        top = top->getPtrNext();
+        cout << endl << top->getSnack();
+        Nodo *pCancel = top;
+        top = top->getNext();
+        temp = pCancel->getSnack();
         delete pCancel;
-        return true;
+    } else {
+        cout << endl << "Distributore vuoto";
     }
-    cout << endl << "Distributore vuoto";
-    return false;
+    return temp;
+}
+int Distributore::erogazione(int soldi) {
+    while (!isEmpty() && soldi > 0)
+    {   
+        cout << pop();
+        soldi--;
+    }
+    return soldi;
+    
 }
 /*
 * Metodo getTop
 */
 bool Distributore::getTop(){
     if (isEmpty()){
-        cout << top->getInfo() << endl;
+        cout << top->getSnack() << endl;
         return true;
     }
     return false;
 }
 
 void scansione(Distributore s) {
-    Node *pTemp = s.top;
+    Nodo *pTemp = s.top;
     while (pTemp) {
-        cout << pTemp->getInfo() << endl;
-        pTemp = pTemp->getPtrNext();
+        cout << pTemp->getSnack() << endl;
+        pTemp = pTemp->getNext();
     }
 }
